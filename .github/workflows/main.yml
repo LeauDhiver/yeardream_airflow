@@ -1,0 +1,26 @@
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push: 
+    branches:
+      - main 
+
+
+# 실행
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3 
+      - name: deploy to EC2
+        uses: appleboy/ssh-action@master # 접속 제공 코드
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # 키페어 필요
+          host: ${{ secrets.HOST }} # ip
+          username: ${{ secrets.USER }} # 해당 유저 접속 
+          script: | # 실행 할 코드
+            cd /home/ubuntu/yeardream_airflow
+            git pull
+  
